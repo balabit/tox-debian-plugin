@@ -69,9 +69,10 @@ def install_debian_deps(venv, action):
         packages = glob('*.deb')
 
         if packages:
-            venv._pcall(['dpkg', '-X'] + packages + [tmp_dir], cwd=toxinidir, action=action)
-            tmp_usr = glob('{}/usr/*'.format(tmp_dir))
-            venv._pcall(['cp', '-r'] + tmp_usr + [str(venv.path)], cwd=toxinidir, action=action)
+            for package in packages:
+                venv._pcall(['dpkg', '--vextract', package, tmp_dir], cwd=toxinidir, action=action)
+                tmp_usr = glob('{}/usr/*'.format(tmp_dir))
+                venv._pcall(['cp', '-r'] + tmp_usr + [str(venv.path)], cwd=toxinidir, action=action)
 
     finally:
         sys.stdout = old_stdout

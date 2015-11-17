@@ -22,12 +22,27 @@ def test_debian_package_will_be_extracted_into_virtual_env(cmd, initproj):
             [testenv]
             debian_deps=
               graphviz
-            commands= ls .tox/python/bin
+            commands= ls -1 .tox/python/bin
         '''
     })
     result = cmd.run("tox", )
     result.stdout.fnmatch_lines(["dot"])
     assert result.ret == 0
+
+
+def test_can_extract_multiple_packages(cmd, initproj):
+    initproj("debian123-0.56", filedefs={
+        'tox.ini': '''
+            [testenv]
+            debian_deps=
+              graphviz
+              vim
+            commands= ls -1 .tox/python/bin
+        '''
+    })
+    result = cmd.run("tox", )
+    assert result.ret == 0
+    result.stdout.fnmatch_lines(["dot", "vim*"])
 
 
 def test_empty_debian_dependency_dont_call_apt_get(cmd, initproj):

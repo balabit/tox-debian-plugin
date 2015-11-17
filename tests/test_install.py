@@ -26,8 +26,8 @@ def test_debian_package_will_be_extracted_into_virtual_env(cmd, initproj):
         '''
     })
     result = cmd.run("tox", )
-    assert result.ret == 0
     result.stdout.fnmatch_lines(["dot"])
+    assert result.ret == 0
 
 
 def test_empty_debian_dependency_dont_call_apt_get(cmd, initproj):
@@ -38,8 +38,8 @@ def test_empty_debian_dependency_dont_call_apt_get(cmd, initproj):
         '''
     })
     result = cmd.run("tox", )
-    assert result.ret == 0
     assert 'apt-get' not in result.stdout.str()
+    assert result.ret == 0
 
 
 def test_can_pass_additional_options_to_apt_get(cmd, initproj):

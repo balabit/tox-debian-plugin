@@ -1,12 +1,11 @@
 import sys
-import py
+import fnmatch
 
 from codecs import getwriter
-from glob import glob
 from tempfile import mkdtemp
-from shutil import rmtree, move
-from os import remove
-from os.path import join as path_join
+from shutil import rmtree
+from os import listdir
+from os.path import curdir, join as path_join
 
 from tox import hookimpl
 from tox import exception
@@ -62,22 +61,19 @@ def install_debian_deps(venv, action):
     sys.stdout = getwriter('utf8')(sys.stdout)
 
     tmp_dir = mkdtemp(prefix='dpkg-')
-    packages = []
 
     try:
-        action.popen(['apt-get', 'download'] + opts + deps, cwd=toxinidir)
-        packages = glob('*.deb')
+        action.popen(['apt-get', 'download'] + opts + deps, cwd=tmp_dir)
+        packages = fnmatch.filter(listdir(tmp_dir), '*.deb')
 
         for package in packages:
-            action.popen(['dpkg', '--vextract', package, tmp_dir], cwd=toxinidir)
-            tmp_usr = glob('{}/usr/*'.format(tmp_dir))
-            action.popen(['cp', '-r'] + tmp_usr + [str(venv.path)], cwd=toxinidir)
+            action.popen(['dpkg', '--vextract', package, curdir], cwd=tmp_dir)
+
+        tmp_usr = path_join(tmp_dir, 'usr')
+        action.popen(['cp', '-r'] + listdir(tmp_usr) + [str(venv.path)], cwd=tmp_usr)
 
     finally:
         sys.stdout = old_stdout
-
-        for package in packages:
-            remove(package)
 
         rmtree(tmp_dir)
 

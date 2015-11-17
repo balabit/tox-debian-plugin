@@ -40,3 +40,18 @@ def test_empty_debian_dependency_dont_call_apt_get(cmd, initproj):
     result = cmd.run("tox", )
     assert result.ret == 0
     assert 'apt-get' not in result.stdout.str()
+
+
+def test_can_pass_additional_options_to_apt_get(cmd, initproj):
+    initproj("debian123-0.56", filedefs={
+        'tox.ini': '''
+            [testenv]
+            apt_opts=
+              --no-such-option
+            debian_deps=
+              graphviz
+        '''
+    })
+    result = cmd.run("tox", )
+    result.stdout.fnmatch_lines(["*no-such-option*"])
+    assert result.ret

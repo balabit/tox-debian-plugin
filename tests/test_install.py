@@ -41,8 +41,8 @@ def test_can_extract_multiple_packages(cmd, initproj):
         '''
     })
     result = cmd.run("tox", )
-    assert result.ret == 0
     result.stdout.fnmatch_lines(["dot", "vim*"])
+    assert result.ret == 0
 
 
 def test_empty_debian_dependency_dont_call_apt_get(cmd, initproj):
@@ -70,3 +70,27 @@ def test_can_pass_additional_options_to_apt_get(cmd, initproj):
     result = cmd.run("tox", )
     result.stdout.fnmatch_lines(["*no-such-option*"])
     assert result.ret
+
+
+def test_install_logs_its_actions(cmd, initproj):
+    initproj("debian123-0.56", filedefs={
+        'tox.ini': '''
+            [tox]
+            envlist=py32
+            [testenv]
+            debian_deps=
+              vim
+              graphviz
+        '''
+    })
+    result = cmd.run("tox", )
+    result.stdout.fnmatch_lines([
+        "py32 apt-get download: vim, graphviz",
+        "py32 dpkg extract: graphviz*",
+        "py32 dpkg extract: vim*",
+        "py32 copy: *bin/dot*"
+    ])
+    # the copied files are listed in one log entry,
+    # therefore the individual file pattern has to be executed twice
+    result.stdout.fnmatch_lines(["py32 copy: *bin/vim*"])
+    assert result.ret == 0

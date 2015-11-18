@@ -4,7 +4,7 @@ import fnmatch
 from codecs import getwriter
 from tempfile import mkdtemp
 from shutil import rmtree
-from os import listdir
+from os import listdir, walk
 from os.path import curdir, join as path_join
 
 from tox import hookimpl
@@ -63,13 +63,16 @@ def install_debian_deps(venv, action):
     tmp_dir = mkdtemp(prefix='dpkg-')
 
     try:
+        action.setactivity('apt-get download', ', '.join(deps))
         action.popen(['apt-get', 'download'] + opts + deps, cwd=tmp_dir)
         packages = fnmatch.filter(listdir(tmp_dir), '*.deb')
 
         for package in packages:
+            action.setactivity('dpkg extract', package)
             action.popen(['dpkg', '--vextract', package, curdir], cwd=tmp_dir)
 
         tmp_usr = path_join(tmp_dir, 'usr')
+        action.setactivity('copy', ', '.join(__list_files(tmp_usr)))
         action.popen(['cp', '-r'] + listdir(tmp_usr) + [str(venv.path)], cwd=tmp_usr)
 
     finally:
@@ -80,3 +83,11 @@ def install_debian_deps(venv, action):
 
 def __strip_list(lst):
     return [item.strip() for item in lst]
+
+
+def __list_files(root):
+    root_str_idx = len(root) + 1
+    for root, dirs, files in walk(root):
+        relative_root = root[root_str_idx:]
+        for name in files:
+            yield path_join(relative_root, name)

@@ -1,28 +1,36 @@
 # tox_DEBIAN
 
-tox_DEBIAN.py is a tox plugin which extracts debian packages
+`tox_DEBIAN.py` is a [tox][tox] plugin which extracts [Debian][deb] packages
 into the tox managed virtual environment.
+
+  [tox]: https://testrun.org/tox/latest/
+  [deb]: http://www.debian.org/
 
 ## Dependency
 
 ### Hook dependency
 
-The plugin implements **tox_setupenv** pluggy hook,
-which is not released yet into tox, but it can be fetched from the
-[github working branch](https://github.com/nyirog/tox).
+The plugin implements the `tox_setupenv` [pluggy][pluggy] hook,
+which is not merged into tox at the time of writing this document (merge
+request to be sent soon), but it can be fetched from [GitHub][gh].
+
+  [pluggy]: https://pypi.python.org/pypi/pluggy
+  [gh]: https://github.com/nyirog/tox
 
 ### External dependency
 
-The plugin uses **apt-get**, **dpkg** and **cp** tools.
+The plugin uses the `apt-get`, `dpkg` and `cp` tools.
 
 ### Test dependency
 
-tox_DEBIAN like tox uses **py.test** for test automatization.
+`tox_DEBIAN`, like `tox`, uses [py.test][pt] for test automatization.
+
+  [pt]: http://pytest.org/latest/
 
 ## Syntax
 
-The debian dependencies has to be listed in the **testenv** section
-as **debian_deps** multi line option.
+The debian dependencies has to be listed in the `testenv` section
+as `debian_deps` multi line option.
 
 ```ini
 [testenv]
@@ -31,7 +39,7 @@ debian_deps =
   python3-yaml
 ```
 
-Extra option can be defined for **apt-get** with **apt_opts** option.
+Extra options can be defined for `apt-get` with the `apt_opts` option:
 
 ```ini
 [testenv]
@@ -46,32 +54,33 @@ debian_deps =
 
 ### Install tox
 
-```
+```sh
 pip install git+https://github.com/nyirog/tox.git
 ```
 
-tox uses _RequirementParseError_ from **pkg_resources** therefore setuptools has to be upgraded.
+`tox` uses `RequirementParseError` from `pkg_resources`, therefore `setuptools`
+might need to be upgraded:
 
-```
+```sh
 pip install --upgrade setuptools
 ```
 
-### Install tox_DEBIAN
+### Install `tox_DEBIAN`
 
-```
+```sh
 pip install git+https://github.com/nyirog/tox-debian-plugin.git
 ```
 
 ## Test
 
-### Local tox_DEBIAN install
+### Local `tox_DEBIAN` install
 
-```
+```sh
 git clone https://github.com/nyirog/tox-debian-plugin.git
 pip install -e tox-debian-plugin
 ```
 
-### Install **py.test**
+### Install `py.test`
 
 ```sh
 pip install pytest

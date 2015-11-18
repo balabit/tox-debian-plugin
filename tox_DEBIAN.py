@@ -1,5 +1,6 @@
 import sys
 import fnmatch
+import py
 
 from codecs import getwriter
 from tempfile import mkdtemp
@@ -53,6 +54,8 @@ def install_debian_deps(venv, action):
     if not deps:
         return
 
+    __ensure_commands(['apt-get', 'dpkg'])
+
     opts = __strip_list(venv.envconfig.apt_opts)
 
     toxinidir = venv.envconfig.config.toxinidir
@@ -91,3 +94,9 @@ def __list_files(root):
         relative_root = root[root_str_idx:]
         for name in files:
             yield path_join(relative_root, name)
+
+
+def __ensure_commands(commands):
+    missing = [command for command in commands if py.path.local.sysfind(command) is None]
+    if missing:
+        raise exception.InvocationError('Could not find executables: {}'.format(', '.join(missing)))

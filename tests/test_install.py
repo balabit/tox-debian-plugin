@@ -1,3 +1,6 @@
+from tox import exception
+from tox_DEBIAN import __ensure_commands
+
 pytest_plugins = "pytester"
 
 
@@ -94,3 +97,12 @@ def test_install_logs_its_actions(cmd, initproj):
     # therefore the individual file pattern has to be executed twice
     result.stdout.fnmatch_lines(["py32 copy: *bin/vim*"])
     assert result.ret == 0
+
+
+def test_ensure_command():
+    try:
+        __ensure_commands(['invalid-command'])
+    except exception.InvocationError as error:
+        assert error.args[0] == 'Could not find executables: invalid-command'
+    else:
+        assert False, 'invalid-command should vahe raise an error'

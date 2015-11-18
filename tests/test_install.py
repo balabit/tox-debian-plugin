@@ -1,3 +1,6 @@
+# Copyright (c) 2015 BalaBit
+# All Rights Reserved.
+
 from tox import exception
 from tox_DEBIAN import __ensure_commands
 

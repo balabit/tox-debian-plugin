@@ -1,3 +1,6 @@
+# Copyright (c) 2015 BalaBit
+# All Rights Reserved.
+
 import sys
 import fnmatch
 import py

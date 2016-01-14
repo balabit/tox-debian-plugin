@@ -55,7 +55,7 @@ debian_deps =
 ### Install tox
 
 ```sh
-pip install git+https://github.com/nyirog/tox.git
+pip install tox
 ```
 
 `tox` uses `RequirementParseError` from `pkg_resources`, therefore `setuptools`

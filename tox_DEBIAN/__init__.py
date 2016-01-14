@@ -36,23 +36,22 @@ class AptOptOption:
 
 
 @hookimpl
-def tox_setupenv(session, venv):
-    action = session.newaction(venv, "install_debian_deps", venv.envconfig.envdir)
+def tox_testenv_install_deps(venv, action):
+    action.setactivity('debian_deps', 'install')
 
     old_stdout, sys.stdout = sys.stdout, getwriter('utf8')(sys.stdout)
 
-    with action:
-        try:
-            install_debian_deps(
-                str(venv.path),
-                __strip_list(venv.envconfig.debian_deps),
-                __strip_list(venv.envconfig.apt_opts),
-                action
-            )
-        except InvocationError as error:
-            venv.status = str(error)
-        finally:
-            sys.stdout = old_stdout
+    try:
+        install_debian_deps(
+            str(venv.path),
+            __strip_list(venv.envconfig.debian_deps),
+            __strip_list(venv.envconfig.apt_opts),
+            action
+        )
+    except InvocationError as error:
+        venv.status = str(error)
+    finally:
+        sys.stdout = old_stdout
 
 
 def __strip_list(lst):

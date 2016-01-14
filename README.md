@@ -10,9 +10,7 @@ into the tox managed virtual environment.
 
 ### Hook dependency
 
-The plugin implements the `tox_setupenv` [pluggy][pluggy] hook,
-which is not merged into tox at the time of writing this document (merge
-request to be sent soon), but it can be fetched from [GitHub][gh].
+The plugin implements the `tox_testenv_install_deps` [pluggy][pluggy] hook,
 
   [pluggy]: https://pypi.python.org/pypi/pluggy
   [gh]: https://github.com/nyirog/tox

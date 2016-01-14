@@ -90,12 +90,16 @@ def test_install_logs_its_actions(cmd, initproj):
     result.stdout.fnmatch_lines([
         "py32 apt-get download: vim, graphviz",
         "py32 dpkg extract: graphviz*",
-        "py32 dpkg extract: vim*",
         "py32 copy: *bin/dot*"
     ])
-    # the copied files are listed in one log entry,
-    # therefore the individual file pattern has to be executed twice
-    result.stdout.fnmatch_lines(["py32 copy: *bin/vim*"])
+    # the order of the packages are provided by os.listdir
+    # which can be different on the test server, therefore
+    # we need an extra individual fnmatch for vim
+    result.stdout.fnmatch_lines([
+        "py32 apt-get download: vim, graphviz",
+        "py32 dpkg extract: vim*",
+        "py32 copy: *bin/vim*",
+    ])
     assert result.ret == 0
 
 

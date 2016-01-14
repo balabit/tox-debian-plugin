@@ -1,5 +1,7 @@
 # tox_DEBIAN
 
+[![Build Status](https://travis-ci.org/balabit/tox-debian-plugin.svg)](https://travis-ci.org/balabit/tox-debian-plugin)
+
 `tox_DEBIAN.py` is a [tox][tox] plugin which extracts [Debian][deb] packages
 into the tox managed virtual environment.
 

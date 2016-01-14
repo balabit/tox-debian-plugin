@@ -15,7 +15,6 @@ into the tox managed virtual environment.
 The plugin implements the `tox_testenv_install_deps` [pluggy][pluggy] hook,
 
   [pluggy]: https://pypi.python.org/pypi/pluggy
-  [gh]: https://github.com/nyirog/tox
 
 ### External dependency
 
@@ -68,7 +67,7 @@ pip install --upgrade setuptools
 ### Install `tox_DEBIAN`
 
 ```sh
-pip install git+https://github.com/nyirog/tox-debian-plugin.git
+pip install git+https://github.com/balabit/tox-debian-plugin.git
 ```
 
 ## Test
@@ -76,7 +75,7 @@ pip install git+https://github.com/nyirog/tox-debian-plugin.git
 ### Local `tox_DEBIAN` install
 
 ```sh
-git clone https://github.com/nyirog/tox-debian-plugin.git
+git clone https://github.com/balabit/tox-debian-plugin.git
 pip install -e tox-debian-plugin
 ```
 

@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.2"
+  - "3.4"
+install:
+  - pip install .
+  - pip install tox
+  - pip install --upgrade setuptools
+  - pip install pytest
+script: py.test tests

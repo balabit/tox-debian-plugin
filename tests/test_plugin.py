@@ -75,7 +75,7 @@ def test_can_pass_additional_options_to_apt_get(cmd, initproj):
     assert result.ret
 
 
-def test_install_logs_its_actions(cmd, initproj):
+def test_install32_logs_its_actions(cmd, initproj):
     initproj("debian123-0.56", filedefs={
         'tox.ini': '''
             [tox]
@@ -103,3 +103,29 @@ def test_install_logs_its_actions(cmd, initproj):
     assert result.ret == 0
 
 
+def test_install27_logs_its_actions(cmd, initproj):
+    initproj("debian123-0.56", filedefs={
+        'tox.ini': '''
+            [tox]
+            envlist=py27
+            [testenv]
+            debian_deps=
+              vim
+              graphviz
+        '''
+    })
+    result = cmd.run("tox", )
+    result.stdout.fnmatch_lines([
+        "py27 apt-get download: vim, graphviz",
+        "py27 dpkg extract: graphviz*",
+        "py27 copy: *bin/dot*"
+    ])
+    # the order of the packages are provided by os.listdir
+    # which can be different on the test server, therefore
+    # we need an extra individual fnmatch for vim
+    result.stdout.fnmatch_lines([
+        "py27 apt-get download: vim, graphviz",
+        "py27 dpkg extract: vim*",
+        "py27 copy: *bin/vim*",
+    ])
+    assert result.ret == 0

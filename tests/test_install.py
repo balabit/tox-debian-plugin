@@ -36,5 +36,5 @@ class Action:
     def setactivity(self, command, details):
         self.log.append({'command': command, 'details': details})
 
-    def popen(self, args, *, cwd):
+    def popen(self, args, cwd):
         self.calls.append({'args': args, 'cwd': cwd})

@@ -11,7 +11,7 @@ from os.path import curdir, isdir, join as path_join
 from collections import Sequence
 
 
-def install_debian_deps(path: str, deps: Sequence, opts: Sequence, action):
+def install_debian_deps(path, deps, opts, action):
     if not deps:
         return
 
@@ -37,7 +37,7 @@ def install_debian_deps(path: str, deps: Sequence, opts: Sequence, action):
         rmtree(tmp_dir)
 
 
-def __iter_files(root: str):
+def __iter_files(root):
     root_str_idx = len(root) + 1
     for root, dirs, files in walk(root):
         relative_root = root[root_str_idx:]
@@ -45,7 +45,7 @@ def __iter_files(root: str):
             yield path_join(relative_root, name)
 
 
-def __ensure_commands(commands: Sequence):
+def __ensure_commands(commands):
     missing = [command for command in commands if py.path.local.sysfind(command) is None]
     if missing:
         raise InvocationError('Could not find executables: {}'.format(', '.join(missing)))

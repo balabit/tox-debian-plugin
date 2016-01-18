@@ -76,56 +76,36 @@ def test_can_pass_additional_options_to_apt_get(cmd, initproj):
 
 
 def test_install32_logs_its_actions(cmd, initproj):
-    initproj("debian123-0.56", filedefs={
-        'tox.ini': '''
-            [tox]
-            envlist=py32
-            [testenv]
-            debian_deps=
-              vim
-              graphviz
-        '''
-    })
-    result = cmd.run("tox", )
-    result.stdout.fnmatch_lines([
-        "py32 apt-get download: vim, graphviz",
-        "py32 dpkg extract: graphviz*",
-        "py32 copy: *bin/dot*"
-    ])
-    # the order of the packages are provided by os.listdir
-    # which can be different on the test server, therefore
-    # we need an extra individual fnmatch for vim
-    result.stdout.fnmatch_lines([
-        "py32 apt-get download: vim, graphviz",
-        "py32 dpkg extract: vim*",
-        "py32 copy: *bin/vim*",
-    ])
-    assert result.ret == 0
+    assert_logs_actions(cmd, initproj, "py32")
 
 
 def test_install27_logs_its_actions(cmd, initproj):
+    assert_logs_actions(cmd, initproj, "py27")
+
+
+def assert_logs_actions(cmd, initproj, venv_name):
     initproj("debian123-0.56", filedefs={
         'tox.ini': '''
             [tox]
-            envlist=py27
+            envlist={venv_name}
             [testenv]
             debian_deps=
               vim
               graphviz
-        '''
+        '''.format(venv_name=venv_name)
     })
     result = cmd.run("tox", )
     result.stdout.fnmatch_lines([
-        "py27 apt-get download: vim, graphviz",
-        "py27 dpkg extract: graphviz*",
-        "py27 copy: *bin/dot*"
+        "{} apt-get download: vim, graphviz".format(venv_name),
+        "{} dpkg extract: graphviz*".format(venv_name),
+        "{} copy: *bin/dot*".format(venv_name)
     ])
-    # the order of the packages are provided by os.listdir
-    # which can be different on the test server, therefore
+    # the order of the packages is provided by os.listdir(),
+    # thus, the order may vary between machines, therefore
     # we need an extra individual fnmatch for vim
     result.stdout.fnmatch_lines([
-        "py27 apt-get download: vim, graphviz",
-        "py27 dpkg extract: vim*",
-        "py27 copy: *bin/vim*",
+        "{} apt-get download: vim, graphviz".format(venv_name),
+        "{} dpkg extract: vim*".format(venv_name),
+        "{} copy: *bin/vim*".format(venv_name),
     ])
     assert result.ret == 0

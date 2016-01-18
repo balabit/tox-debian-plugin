@@ -8,7 +8,6 @@ from tempfile import mkdtemp
 from shutil import rmtree
 from os import listdir, walk
 from os.path import curdir, isdir, join as path_join
-from collections import Sequence
 
 
 def install_debian_deps(path, deps, opts, action):
